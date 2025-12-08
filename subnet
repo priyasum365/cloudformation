@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: subnet template
+
+Resources:
+  Subnets:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [ 0, !GetAZs "" ] 
+      CidrBlock: !ImportValue VPCcidr
+      Tags: 
+        - 
+          Key: Name
+          Value: "CFT Subnet 1"
+      VpcId: !ImportValue VPCId
