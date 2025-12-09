@@ -62,4 +62,10 @@ Outputs:
     Export:
       Name: VPCcidr
 
+  IGW:
+    Value:  !Ref myIGW
+    Export:
+      Name: IGW
+
+
   
