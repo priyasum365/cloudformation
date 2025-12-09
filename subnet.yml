@@ -2,13 +2,61 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: subnet template
 
 Resources:
-  Subnets:
+  Subnet1:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Select [ 0, !GetAZs "" ] 
-      CidrBlock: !ImportValue VPCcidr
+      CidrBlock: !Select [ 0, !Cidr [ !ImportValue VPCcidr, 3, 8 ]]
+      #expected 10.0.0.0/24
       Tags: 
         - 
           Key: Name
           Value: "CFT Subnet 1"
       VpcId: !ImportValue VPCId
+
+  Subnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [ 1, !GetAZs "" ] 
+      CidrBlock: !Select [ 1, !Cidr [ !ImportValue VPCcidr, 3, 8 ]]
+      #expected 10.0.0.0/24
+      Tags: 
+        - 
+          Key: Name
+          Value: "CFT Subnet 2"
+      VpcId: !ImportValue VPCId
+
+  Subnet3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Select [ 2, !GetAZs "" ] 
+      CidrBlock: !Select [ 2, !Cidr [ !ImportValue VPCcidr, 3, 8 ]]
+      #expected 10.0.0.0/24
+      Tags: 
+        - 
+          Key: Name
+          Value: "CFT Subnet 3"
+      VpcId: !ImportValue VPCId
+
+  PublicRT:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !ImportValue VPCId
+
+  myRoute:
+    Type: AWS::EC2::Route
+    #DependsOn: GatewayToInternet
+    Properties:
+       RouteTableId: !Ref PublicRT
+       DestinationCidrBlock: 0.0.0.0/0
+       GatewayId: !ImportValue IGW
+
+  Subnet1PublicRT:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRT
+      SubnetId: !Ref Subnet1
+
+         
+
+     
